@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block  title %}
+    Изменить задачу
+{% endblock %}
+
+{% block  content %}
+    <h2>Редактирование задачи</h2>
+    <form action="" method="POST">
+        {% include 'partial/form.html' with value_submit='Изменить' %}
+    </form>
+{% endblock %}

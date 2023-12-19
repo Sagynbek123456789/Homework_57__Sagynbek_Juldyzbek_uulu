@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from webapp.models import Issue
 from webapp.forms import IssueForm
 
@@ -45,3 +45,29 @@ class IssueCreateView(TemplateView):
             return redirect('issue_view', pk=issue.pk)
 
         return render(request, 'issue_create.html', {'form': form})
+
+
+class IssueUpdateView(View):
+    def dispatch(self, request, *args, **kwargs):
+        self.issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = IssueForm(initial={
+            'summary': self.issue.summary,
+            'descriptions': self.issue.descriptions,
+            'status': self.issue.status,
+            'type': self.issue.type
+        })
+        return render(request, 'issue_update.html', {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = IssueForm(data=request.POST)
+        if form.is_valid():
+            self.issue.summary = form.cleaned_data.get('summary')
+            self.issue.descriptions = form.cleaned_data.get('descriptions')
+            self.issue.status = form.cleaned_data.get('status')
+            self.issue.type = form.cleaned_data.get('type')
+            self.issue.save()
+            return redirect('issue_view', pk=self.issue.pk)
+        return render(request, 'issue_update.html', {'form': form})
