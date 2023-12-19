@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block  title %}
+    Главная
+{% endblock %}
+
+{% block menu %}
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Создать задачу</a>
+    </li>
+{% endblock %}
+
+{% block  content %}
+    <div class="row row-cols-3">
+        {% for issue in issues %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="#" class="text-success">{{ issue.summary }}</a></h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Статус: {{ issue.status.title }}</h6>
+                        <p class="card-text">Тип: {{ issue.type.title }}</p>
+                        <a href="#" class="card-link">Редактирование</a>
+                        <a href="#" class="card-link">Удаление</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
