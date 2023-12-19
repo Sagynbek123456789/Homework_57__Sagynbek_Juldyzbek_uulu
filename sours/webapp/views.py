@@ -71,3 +71,18 @@ class IssueUpdateView(View):
             self.issue.save()
             return redirect('issue_view', pk=self.issue.pk)
         return render(request, 'issue_update.html', {'form': form})
+
+
+class IssueDeleteView(TemplateView):
+    template_name = 'issue_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
+        context['issue'] = issue
+        return context
+
+    def post(self, request, *args, **kwargs):
+        issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
+        issue.delete()
+        return redirect('index')
