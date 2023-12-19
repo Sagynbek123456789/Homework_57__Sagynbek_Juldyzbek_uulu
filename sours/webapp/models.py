@@ -19,8 +19,8 @@ class Type(models.Model):
 class Issue(models.Model):
     summary = models.CharField(max_length=50, verbose_name='Краткое описание')
     descriptions = models.TextField(null=True, blank=True, verbose_name='Полное описание')
-    status = models.ForeignKey('webapp.Status', on_delete=models.RESTRICT, verbose_name='Статус')
-    type = models.ForeignKey('webapp.Type', on_delete=models.RESTRICT, verbose_name='Тип')
+    status = models.ForeignKey('webapp.Status', on_delete=models.RESTRICT, related_name='issues', verbose_name='Статус')
+    types = models.ManyToManyField('webapp.Type', related_name='issues', verbose_name='Типы')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
 

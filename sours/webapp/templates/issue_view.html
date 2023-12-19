@@ -20,7 +20,10 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ issue.summary }}</h5>
                     <h6 class="card-subtitle mb-2 text-body-secondary">Статус: {{ issue.status.title }}</h6>
-                    <p class="card-subtitle mb-2 text-body-secondary">Тип: {{ issue.type.title }}</p>
+                    <p class="card-subtitle mb-2 text-body-secondary">Типы:
+                            {% for type in issue.types.all %}
+                            	{{ type.title }} {% if forloop.last %}.{% else %}, {% endif %}
+                            {% endfor %}</p>
                     <p class="card-text">{{ issue.descriptions }}</p>
                 </div>
                 <div class="card-footer">

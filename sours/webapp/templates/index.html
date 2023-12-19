@@ -18,7 +18,11 @@
                     <div class="card-body">
                         <h5 class="card-title"><a href="{% url 'issue_view' issue.pk %}" class="text-success">{{ issue.summary }}</a></h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">Статус: {{ issue.status.title }}</h6>
-                        <p class="card-subtitle mb-2 text-body-secondary">Тип: {{ issue.type.title }}</p>
+                        <p class="card-subtitle mb-2 text-body-secondary">Типы:
+                            {% for type in issue.types.all %}
+                            	{{ type.title }} {% if forloop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                            </p>
                         <a href="{% url 'issue_update_view' issue.pk %}" class="card-link">Редактирование</a>
                         <a href="{% url 'issue_delete_view' issue.pk %}" class="card-link">Удаление</a>
                     </div>
