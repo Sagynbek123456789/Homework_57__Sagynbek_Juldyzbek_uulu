@@ -36,13 +36,7 @@ class IssueCreateView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = IssueForm(data=request.POST)
         if form.is_valid():
-            types = form.cleaned_data.pop('types')
-            issue = Issue.objects.create(
-                summary=form.cleaned_data['summary'],
-                descriptions=form.cleaned_data['descriptions'],
-                status=form.cleaned_data['status']
-            )
-            issue.types.set(types)
+            issue = form.save()
             return redirect('issue_view', pk=issue.pk)
 
         return render(request, 'issue_create.html', {'form': form})
@@ -54,23 +48,13 @@ class IssueUpdateView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        form = IssueForm(initial={
-            'summary': self.issue.summary,
-            'descriptions': self.issue.descriptions,
-            'status': self.issue.status,
-            'types': self.issue.types.all()
-        })
+        form = IssueForm(instance=self.issue)
         return render(request, 'issue_update.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = IssueForm(data=request.POST)
+        form = IssueForm(instance=self.issue, data=request.POST)
         if form.is_valid():
-            types = form.cleaned_data.pop('types')
-            self.issue.summary = form.cleaned_data.get('summary')
-            self.issue.descriptions = form.cleaned_data.get('descriptions')
-            self.issue.status = form.cleaned_data.get('status')
-            self.issue.save()
-            self.issue.types.set(types)
+            form.save()
             return redirect('issue_view', pk=self.issue.pk)
         return render(request, 'issue_update.html', {'form': form})
 
