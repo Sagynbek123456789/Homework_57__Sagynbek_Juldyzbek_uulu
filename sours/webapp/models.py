@@ -41,6 +41,18 @@ class Issue(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
+    project = models.ForeignKey('webapp.Project', on_delete=models.CASCADE, related_name='issues', verbose_name='Проект')
 
     def __str__(self):
         return f'{self.id}. {self.summary}'
+
+
+class Project(models.Model):
+    title = models.CharField(max_length=50, verbose_name='Название')
+    descriptions = models.TextField(verbose_name='Описание')
+    start_date = models.DateField(verbose_name='Дата начала')
+    end_date = models.DateField(verbose_name='Дата окончания', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.title} - {self.start_date} - {self.end_date}'
+
