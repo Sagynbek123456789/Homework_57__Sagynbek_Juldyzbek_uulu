@@ -1,5 +1,5 @@
 from django.urls import path
-from webapp.views import IndexView, IssueView, IssueCreateView, IssueUpdateView, IssueDeleteView
+from webapp.views.issues import IndexView, IssueView, IssueCreateView, IssueUpdateView, IssueDeleteView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
