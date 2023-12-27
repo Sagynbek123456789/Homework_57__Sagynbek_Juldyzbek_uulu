@@ -5,18 +5,9 @@ from webapp.forms import IssueForm
 
 
 # Create your views here.
-class IndexView(TemplateView):
-    template_name = 'index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        issues = Issue.objects.all()
-        context['issues'] = issues
-        return context
-
 
 class IssueView(TemplateView):
-    template_name = 'issue_view.html'
+    template_name = 'issues/issue_view.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -26,7 +17,7 @@ class IssueView(TemplateView):
 
 
 class IssueCreateView(TemplateView):
-    template_name = 'issue_create.html'
+    template_name = 'issues/issue_create.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,7 +30,7 @@ class IssueCreateView(TemplateView):
             issue = form.save()
             return redirect('issue_view', pk=issue.pk)
 
-        return render(request, 'issue_create.html', {'form': form})
+        return render(request, 'issues/issue_create.html', {'form': form})
 
 
 class IssueUpdateView(View):
@@ -49,18 +40,18 @@ class IssueUpdateView(View):
 
     def get(self, request, *args, **kwargs):
         form = IssueForm(instance=self.issue)
-        return render(request, 'issue_update.html', {'form': form})
+        return render(request, 'issues/issue_update.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
         form = IssueForm(instance=self.issue, data=request.POST)
         if form.is_valid():
             form.save()
             return redirect('issue_view', pk=self.issue.pk)
-        return render(request, 'issue_update.html', {'form': form})
+        return render(request, 'issues/issue_update.html', {'form': form})
 
 
 class IssueDeleteView(TemplateView):
-    template_name = 'issue_delete.html'
+    template_name = 'issues/issue_delete.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
