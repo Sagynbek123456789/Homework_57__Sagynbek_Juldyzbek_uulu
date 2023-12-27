@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block  title %}
+    Главная
+{% endblock %}
+
+{% block menu %}
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Создать проект</a>
+    </li>
+{% endblock %}
+
+{% block  content %}
+    <div class="row row-cols-3">
+        {% for project in projects %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="#" class="text-success">{{ project.title }}</a></h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ project.descriptions }}</h6>
+                        <p class="card-subtitle mb-2 text-body-secondary">Дата начала: {{ project.start_date }}</p>
+                        <p class="card-subtitle mb-2 text-body-secondary">Дата окончания: {{ project.end_date|default:" - " }}</p>
+                        <a href="#" class="card-link">Редактирование</a>
+                        <a href="#" class="card-link">Удаление</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
