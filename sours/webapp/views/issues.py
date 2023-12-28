@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import TemplateView, View
-from webapp.models import Issue
+from django.views.generic import TemplateView, View, CreateView
+from webapp.models import Issue, Project
 from webapp.forms import IssueForm
 
 
@@ -16,21 +16,30 @@ class IssueView(TemplateView):
         return context
 
 
-class IssueCreateView(TemplateView):
+class IssueCreateView(CreateView):
     template_name = 'issues/issue_create.html'
+    form_class = IssueForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = IssueForm()
-        return context
+    def form_valid(self, form):
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        issue = form.save(commit=False)
+        issue.project = project
+        issue.save()
+        form.save_m2m()
+        return redirect('project_view', pk=project.pk)
 
-    def post(self, request, *args, **kwargs):
-        form = IssueForm(data=request.POST)
-        if form.is_valid():
-            issue = form.save()
-            return redirect('issue_view', pk=issue.pk)
-
-        return render(request, 'issues/issue_create.html', {'form': form})
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['form'] = IssueForm()
+    #     return context
+    #
+    # def post(self, request, *args, **kwargs):
+    #     form = IssueForm(data=request.POST)
+    #     if form.is_valid():
+    #         issue = form.save()
+    #         return redirect('issue_view', pk=issue.pk)
+    #
+    #     return render(request, 'issues/issue_create.html', {'form': form})
 
 
 class IssueUpdateView(View):
