@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block  title %}
+    {{ issue.summary }}
+{% endblock %}
+
+{% block menu %}
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Редактирование</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Удаление</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Добавить задачу</a>
+    </li>
+{% endblock %}
+
+{% block  content %}
+    <h1>Проект</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <p class="card-text">{{ issue.descriptions }}</p>
+                </div>
+                <div class="card-footer">
+                    <p class="card-text">Дата начала: {{ project.start_date }}</p>
+                    <p class="card-text">Дата окончания: {{ project.end_date | default:" - " }}</p>
+                </div>
+            </div>
+    <h3>Задачи</h3>
+    <div class="row row-cols-3">
+        {% for issue in project.issues.all %}
+            <div class="col mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'issue_view' issue.pk %}" class="text-success">{{ issue.summary }}</a></h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Статус: {{ issue.status.title }}</h6>
+                    <p class="card-subtitle mb-2 text-body-secondary">Типы:
+                            {% for type in issue.types.all %}
+                            	{{ type.title }} {% if forloop.last %}.{% else %}, {% endif %}
+                            {% endfor %}</p>
+                        <a href="{% url 'issue_update_view' issue.pk %}" class="card-link">Редактирование</a>
+                        <a href="{% url 'issue_delete_view' issue.pk %}" class="card-link">Удаление</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>нет задач</p>
+        {% endfor %}
+    </div>
+{% endblock %}

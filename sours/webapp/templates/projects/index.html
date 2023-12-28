@@ -11,12 +11,18 @@
 {% endblock %}
 
 {% block  content %}
+    <div>
+        {% include 'partial/simple_search.html' %}
+    </div>
+    {% if is_paginated %}
+    	{% include 'partial/pagination.html' %}
+    {% endif %} 
     <div class="row row-cols-3">
         {% for project in projects %}
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><a href="#" class="text-success">{{ project.title }}</a></h5>
+                        <h5 class="card-title"><a href="{% url 'project_view' project.pk %}" class="text-success">{{ project.title }}</a></h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{ project.descriptions }}</h6>
                         <p class="card-subtitle mb-2 text-body-secondary">Дата начала: {{ project.start_date }}</p>
                         <p class="card-subtitle mb-2 text-body-secondary">Дата окончания: {{ project.end_date|default:" - " }}</p>
@@ -25,6 +31,11 @@
                     </div>
                 </div>
             </div>
+            {% empty %}
+            <p>проекты не найдены</p>
         {% endfor %}
     </div>
+    {% if is_paginated %}
+    	{% include 'partial/pagination.html' %}
+    {% endif %}
 {% endblock %}

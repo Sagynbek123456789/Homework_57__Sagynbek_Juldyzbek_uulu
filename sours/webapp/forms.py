@@ -1,6 +1,6 @@
 from django import forms
 from webapp.models import Type, Status
-from webapp.models import Issue
+from webapp.models import Issue, Project
 
 
 class IssueForm(forms.ModelForm):
@@ -11,6 +11,15 @@ class IssueForm(forms.ModelForm):
             'types': forms.CheckboxSelectMultiple()
         }
 
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['title', 'descriptions', 'start_date', 'end_date']
+
+
+class SimpleSearchForm(forms.Form):
+    search = forms.CharField(max_length=100, required=False, label='Найти')
 
 
 # class IssueForm(forms.ModelForm):

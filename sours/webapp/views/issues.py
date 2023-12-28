@@ -63,3 +63,5 @@ class IssueDeleteView(TemplateView):
         issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
         issue.delete()
         return redirect('index')
+
+
