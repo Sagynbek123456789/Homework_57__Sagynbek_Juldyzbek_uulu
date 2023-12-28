@@ -56,6 +56,23 @@ class ProjectCreateView(CreateView):
         return reverse('project_view', kwargs={'pk': self.object.pk})
 
 
+class ProjectUpdateView(UpdateView):
+    model = Project
+    template_name = 'projects/project_update.html'
+    form_class = ProjectForm
+
+    def get_success_url(self):
+        return reverse('project_view', kwargs={'pk': self.object.pk})
+
+
+class ProjectDeleteView(DeleteView):
+    model = Project
+    template_name = 'projects/project_delete.html'
+    form_class = ProjectForm
+
+
+
+
 # class IndexView(TemplateView):
 #     template_name = 'projects/index.html'
 #
