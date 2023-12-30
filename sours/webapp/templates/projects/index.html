@@ -5,9 +5,11 @@
 {% endblock %}
 
 {% block menu %}
+    {% if request.user.is_authenticated %}
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_add_view' %}">Создать проект</a>
     </li>
+    {% endif %}
 {% endblock %}
 
 {% block  content %}

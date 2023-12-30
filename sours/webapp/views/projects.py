@@ -1,9 +1,10 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from webapp.models import Project
 from webapp.forms import SimpleSearchForm, ProjectForm
 from django.utils.http import urlencode
-from django.shortcuts import reverse
+from django.shortcuts import reverse, redirect
 from django.urls import reverse_lazy
 
 
@@ -43,12 +44,12 @@ class ProjectListView(ListView):
         return context
 
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = 'projects/project_view.html'
 
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = Project
     template_name = 'projects/project_create.html'
     form_class = ProjectForm
@@ -56,8 +57,13 @@ class ProjectCreateView(CreateView):
     def get_success_url(self):
         return reverse('project_view', kwargs={'pk': self.object.pk})
 
+    # def dispatch(self, request, *args, **kwargs):
+    #     if not request.user.is_authenticated:
+    #         return redirect('accounts:login')
+    #     return super().dispatch(request, *args, **kwargs)
 
-class ProjectUpdateView(UpdateView):
+
+class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     template_name = 'projects/project_update.html'
     form_class = ProjectForm
@@ -66,7 +72,7 @@ class ProjectUpdateView(UpdateView):
         return reverse('project_view', kwargs={'pk': self.object.pk})
 
 
-class ProjectDeleteView(DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = Project
     template_name = 'projects/project_delete.html'
     success_url = reverse_lazy('webapp:index')

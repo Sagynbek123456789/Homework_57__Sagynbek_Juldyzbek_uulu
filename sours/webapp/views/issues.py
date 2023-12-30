@@ -29,6 +29,11 @@ class IssueCreateView(CreateView):
         form.save_m2m()
         return redirect('project_view', pk=project.pk)
 
+    # def dispatch(self, request, *args, **kwargs):
+    #     if not request.user.is_authenticated:
+    #         return redirect('accounts:login')
+    #     return super().dispatch(request, *args, **kwargs)
+
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['form'] = IssueForm()
@@ -73,6 +78,7 @@ class IssueDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('project_view', kwargs={'pk': self.object.project.pk})
+
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
