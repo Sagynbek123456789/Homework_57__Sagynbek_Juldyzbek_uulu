@@ -6,7 +6,7 @@
 
 {% block menu %}
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{% url 'project_add_view' %}">Создать проект</a>
+        <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_add_view' %}">Создать проект</a>
     </li>
 {% endblock %}
 
@@ -22,11 +22,11 @@
             <div class="col">
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h5 class="card-title"><a href="{% url 'project_view' project.pk %}" class="text-success">{{ project.title }}</a></h5>
+                        <h5 class="card-title"><a href="{% url 'webapp:project_view' project.pk %}" class="text-success">{{ project.title }}</a></h5>
                         <p class="card-subtitle mb-2 text-body-secondary">Дата начала: {{ project.start_date }}</p>
                         <p class="card-subtitle mb-2 text-body-secondary">Дата окончания: {{ project.end_date|default:" - " }}</p>
-                        <a href="{% url 'project_update_view' project.pk %}" class="card-link">Редактирование</a>
-                        <a href="{% url 'project_delete_view' project.pk %}" class="card-link">Удаление</a>
+                        <a href="{% url 'webapp:project_update_view' project.pk %}" class="card-link">Редактирование</a>
+                        <a href="{% url 'webapp:project_delete_view' project.pk %}" class="card-link">Удаление</a>
                     </div>
                 </div>
             </div>

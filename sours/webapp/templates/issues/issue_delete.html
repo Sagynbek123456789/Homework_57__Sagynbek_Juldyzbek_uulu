@@ -10,5 +10,5 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Да</button>
     </form>
-    <a href="{% url 'issue_view' issue.pk %}" class="btn btn-success">Нет</a>
+    <a href="{% url 'webapp:issue_view' issue.pk %}" class="btn btn-success">Нет</a>
 {% endblock %}

@@ -6,13 +6,13 @@
 
 {% block menu %}
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{% url 'project_update_view' project.pk %}">Редактирование</a>
+        <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_update_view' project.pk %}">Редактирование</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{% url 'project_delete_view' project.pk %}">Удаление</a>
+        <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_delete_view' project.pk %}">Удаление</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{% url 'issue_add_view' project.pk %}">Добавить задачу</a>
+        <a class="nav-link active" aria-current="page" href="{% url 'webapp:issue_add_view' project.pk %}">Добавить задачу</a>
     </li>
 {% endblock %}
 
@@ -34,14 +34,14 @@
             <div class="col mb-2">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><a href="{% url 'issue_view' issue.pk %}" class="text-success">{{ issue.summary }}</a></h5>
+                        <h5 class="card-title"><a href="{% url 'webapp:issue_view' issue.pk %}" class="text-success">{{ issue.summary }}</a></h5>
                     <h6 class="card-subtitle mb-2 text-body-secondary">Статус: {{ issue.status.title }}</h6>
                     <p class="card-subtitle mb-2 text-body-secondary">Типы:
                             {% for type in issue.types.all %}
                             	{{ type.title }} {% if forloop.last %}.{% else %}, {% endif %}
                             {% endfor %}</p>
-                        <a href="{% url 'issue_update_view' issue.pk %}" class="card-link">Редактирование</a>
-                        <a href="{% url 'issue_delete_view' issue.pk %}" class="card-link">Удаление</a>
+                        <a href="{% url 'webapp:issue_update_view' issue.pk %}" class="card-link">Редактирование</a>
+                        <a href="{% url 'webapp:issue_delete_view' issue.pk %}" class="card-link">Удаление</a>
                     </div>
                 </div>
             </div>

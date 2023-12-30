@@ -6,10 +6,10 @@
 
 {% block menu %}
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{% url 'issue_update_view' issue.pk %}">Редактирование</a>
+        <a class="nav-link active" aria-current="page" href="{% url 'webapp:issue_update_view' issue.pk %}">Редактирование</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{% url 'issue_delete_view' issue.pk %}">Удаление</a>
+        <a class="nav-link active" aria-current="page" href="{% url 'webapp:issue_delete_view' issue.pk %}">Удаление</a>
     </li>
 {% endblock %}
 

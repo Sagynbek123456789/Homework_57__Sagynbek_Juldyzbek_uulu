@@ -2,6 +2,8 @@ from django.urls import path
 from webapp.views import IssueView, IssueCreateView, IssueUpdateView, IssueDeleteView, \
     ProjectListView, ProjectDetailView, ProjectCreateView, ProjectUpdateView, ProjectDeleteView
 
+app_name = 'webapp'
+
 urlpatterns = [
     path('', ProjectListView.as_view(), name='index'),
     path('issues/<int:pk>', IssueView.as_view(), name='issue_view'),
