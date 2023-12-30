@@ -20,6 +20,8 @@
 {#                        </li>#}
                         {% block menu %}
                         {% endblock %}
+                        <a class="nav-link active" aria-current="page" href="#">Регистрация</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'accounts:login' %}">Вход</a>
                     </ul>
                 </div>
             </div>
