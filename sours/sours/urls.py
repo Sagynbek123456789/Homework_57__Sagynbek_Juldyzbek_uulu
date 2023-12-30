@@ -22,3 +22,4 @@ urlpatterns = [
     path('', include('webapp.urls')),
     path('accounts/', include('accounts.urls'))
 ]
+

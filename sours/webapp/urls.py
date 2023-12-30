@@ -4,6 +4,7 @@ from webapp.views import IssueView, IssueCreateView, IssueUpdateView, IssueDelet
 
 app_name = 'webapp'
 
+
 urlpatterns = [
     path('', ProjectListView.as_view(), name='index'),
     path('issues/<int:pk>', IssueView.as_view(), name='issue_view'),
