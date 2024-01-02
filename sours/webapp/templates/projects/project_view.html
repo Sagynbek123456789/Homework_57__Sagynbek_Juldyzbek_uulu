@@ -6,12 +6,12 @@
 
 
 {% block menu %}
-    {% if perms.webapp.change_project %}
+    {% if perms.webapp.change_project or project.user == request.user%}
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_update_view' project.pk %}">Редактирование</a>
     </li>
     {% endif %}
-    {% if perms.webapp.delete_project %}
+    {% if perms.webapp.change_project or project.user == request.user%}
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_delete_view' project.pk %}">Удаление</a>
     </li>
@@ -45,8 +45,12 @@
                             {% for type in issue.types.all %}
                             	{{ type.title }} {% if forloop.last %}.{% else %}, {% endif %}
                             {% endfor %}</p>
+                        {% if perms.webapp.update_issue or issue.user == request.user%}
                         <a href="{% url 'webapp:issue_update_view' issue.pk %}" class="card-link">Редактирование</a>
+                        {% endif %}
+                        {% if perms.webapp.delete_issue or issue.user == request.user%}
                         <a href="{% url 'webapp:issue_delete_view' issue.pk %}" class="card-link">Удаление</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

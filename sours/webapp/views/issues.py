@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.generic import TemplateView, View, CreateView, UpdateView, DetailView, DeleteView
 from webapp.models import Issue, Project
@@ -18,7 +18,7 @@ class IssueView(DeleteView):
     #     return context
 
 
-class IssueCreateView(LoginRequiredMixin, CreateView):
+class IssueCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'issues/issue_create.html'
     form_class = IssueForm
     permission_required = 'webapp.change_issue'
@@ -51,11 +51,14 @@ class IssueCreateView(LoginRequiredMixin, CreateView):
     #     return render(request, 'issues/issue_create.html', {'form': form})
 
 
-class IssueUpdateView(LoginRequiredMixin, UpdateView):
+class IssueUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'issues/issue_update.html'
     model = Issue
     form_class = IssueForm
     permission_required = 'webapp.change_issue'
+
+    def has_permission(self):
+        return self.request.user.has_perm('webapp.delete_project') or self.request.user == self.get_object().summary
 # class IssueUpdateView(View):
 #     def dispatch(self, request, *args, **kwargs):
 #         self.issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
@@ -76,10 +79,13 @@ class IssueUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('webapp:project_view', kwargs={'pk': self.object.project.pk})
 
 
-class IssueDeleteView(LoginRequiredMixin, DeleteView):
+class IssueDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'issues/issue_delete.html'
     model = Issue
     permission_required = 'webapp.change_issue'
+
+    def has_permission(self):
+        return self.request.user.has_perm('webapp.delete_project') or self.request.user == self.get_object().summary
 
     def get_success_url(self):
         return reverse('webapp:project_view', kwargs={'pk': self.object.project.pk})

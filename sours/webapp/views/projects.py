@@ -81,6 +81,9 @@ class ProjectUpdateView(PermissionRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('webapp:project_view', kwargs={'pk': self.object.pk})
 
+    def has_permission(self):
+        return self.request.user.has_perm('webapp.delete_project') or self.request.user == self.get_object().author
+
 
 class ProjectDeleteView(PermissionRequiredMixin, DeleteView):
     model = Project
