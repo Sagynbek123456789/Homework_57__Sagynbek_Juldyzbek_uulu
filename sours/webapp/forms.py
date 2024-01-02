@@ -6,7 +6,7 @@ from webapp.models import Issue, Project
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Issue
-        fields = ['summary', 'descriptions', 'status', 'types']
+        fields = ['descriptions', 'status', 'types']
         widgets = {
             'types': forms.CheckboxSelectMultiple()
         }
@@ -15,7 +15,7 @@ class IssueForm(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'descriptions', 'start_date', 'end_date']
+        fields = ['descriptions', 'start_date', 'end_date']
 
 
 class SimpleSearchForm(forms.Form):

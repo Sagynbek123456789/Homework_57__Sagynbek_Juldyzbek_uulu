@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from .validators import validate_summary_not_empty, validate_descriptions_length
 
@@ -17,10 +18,12 @@ class Type(models.Model):
 
 
 class Issue(models.Model):
-    summary = models.CharField(
-        max_length=50,
-        verbose_name='Краткое описание',
-        validators=[validate_summary_not_empty]
+    summary = models.ForeignKey(
+        get_user_model(),
+        default=1,
+        related_name='issue',
+        on_delete=models.CASCADE,
+        verbose_name='Название'
     )
     descriptions = models.TextField(
         null=True,
@@ -48,7 +51,7 @@ class Issue(models.Model):
 
 
 class Project(models.Model):
-    title = models.CharField(max_length=50, verbose_name='Название')
+    title = models.ForeignKey(get_user_model(), default=1, related_name='projects', on_delete=models.CASCADE, verbose_name='Название')
     descriptions = models.TextField(verbose_name='Описание')
     start_date = models.DateField(verbose_name='Дата начала')
     end_date = models.DateField(verbose_name='Дата окончания', null=True, blank=True)
