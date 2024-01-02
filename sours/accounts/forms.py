@@ -25,6 +25,12 @@ class MyUserCreationForm(forms.ModelForm):
             raise forms.ValidationError('Поле "Фамилия" должно быть заполнено.')
         return last_name
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError('Поле "Email должно быть заполненым.')
+        return email
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
