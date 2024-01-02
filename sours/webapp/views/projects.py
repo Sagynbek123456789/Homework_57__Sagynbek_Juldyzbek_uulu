@@ -55,7 +55,14 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     form_class = ProjectForm
 
     def get_success_url(self):
-        return reverse('project_view', kwargs={'pk': self.object.pk})
+        return reverse('webapp:project_view', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.title = self.request.user
+        self.object.save()
+        # form.save_m2m()
+        return redirect(self.get_success_url())
 
     # def dispatch(self, request, *args, **kwargs):
     #     if not request.user.is_authenticated:
@@ -69,7 +76,7 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ProjectForm
 
     def get_success_url(self):
-        return reverse('project_view', kwargs={'pk': self.object.pk})
+        return reverse('webapp:project_view', kwargs={'pk': self.object.pk})
 
 
 class ProjectDeleteView(LoginRequiredMixin, DeleteView):

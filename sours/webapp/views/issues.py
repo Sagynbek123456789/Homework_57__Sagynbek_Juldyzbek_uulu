@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.generic import TemplateView, View, CreateView, UpdateView, DetailView, DeleteView
 from webapp.models import Issue, Project
@@ -17,7 +18,7 @@ class IssueView(DeleteView):
     #     return context
 
 
-class IssueCreateView(CreateView):
+class IssueCreateView(LoginRequiredMixin, CreateView):
     template_name = 'issues/issue_create.html'
     form_class = IssueForm
 
@@ -25,9 +26,10 @@ class IssueCreateView(CreateView):
         project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
         issue = form.save(commit=False)
         issue.project = project
+        issue.summary = self.request.user
         issue.save()
         form.save_m2m()
-        return redirect('project_view', pk=project.pk)
+        return redirect('webapp:project_view', pk=project.pk)
 
     # def dispatch(self, request, *args, **kwargs):
     #     if not request.user.is_authenticated:
@@ -69,7 +71,7 @@ class IssueUpdateView(UpdateView):
 #         return render(request, 'issues/issue_update.html', {'form': form})
 
     def get_success_url(self):
-        return reverse('project_view', kwargs={'pk': self.object.project.pk})
+        return reverse('webapp:project_view', kwargs={'pk': self.object.project.pk})
 
 
 class IssueDeleteView(DeleteView):
@@ -77,7 +79,7 @@ class IssueDeleteView(DeleteView):
     model = Issue
 
     def get_success_url(self):
-        return reverse('project_view', kwargs={'pk': self.object.project.pk})
+        return reverse('webapp:project_view', kwargs={'pk': self.object.project.pk})
 
 
     # def get_context_data(self, **kwargs):
