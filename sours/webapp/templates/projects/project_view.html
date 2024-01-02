@@ -16,9 +16,11 @@
         <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_delete_view' project.pk %}">Удаление</a>
     </li>
     {% endif %}
+    {% if request.user.is_authenticated %}
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="{% url 'webapp:issue_add_view' project.pk %}">Добавить задачу</a>
     </li>
+    {% endif %}
 {% endblock %}
 
 {% block  content %}
