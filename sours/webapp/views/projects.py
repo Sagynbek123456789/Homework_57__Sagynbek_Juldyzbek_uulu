@@ -47,6 +47,7 @@ class ProjectListView(ListView):
 class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = 'projects/project_view.html'
+    permission_required = 'webapp.view_project'
 
 
 class ProjectCreateView(PermissionRequiredMixin, CreateView):
@@ -75,7 +76,7 @@ class ProjectUpdateView(PermissionRequiredMixin, UpdateView):
     model = Project
     template_name = 'projects/project_update.html'
     form_class = ProjectForm
-    permission_required = 'webapp.change_project'
+    permission_required = 'webapp.update_project'
 
     def get_success_url(self):
         return reverse('webapp:project_view', kwargs={'pk': self.object.pk})
@@ -85,7 +86,7 @@ class ProjectDeleteView(PermissionRequiredMixin, DeleteView):
     model = Project
     template_name = 'projects/project_delete.html'
     success_url = reverse_lazy('webapp:index')
-    permission_required = 'webapp.change_project'
+    permission_required = 'webapp.delete_project'
 
 
 

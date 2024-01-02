@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.generic import TemplateView, View, CreateView, UpdateView, DetailView, DeleteView
 from webapp.models import Issue, Project
@@ -21,6 +21,7 @@ class IssueView(DeleteView):
 class IssueCreateView(LoginRequiredMixin, CreateView):
     template_name = 'issues/issue_create.html'
     form_class = IssueForm
+    permission_required = 'webapp.change_issue'
 
     def form_valid(self, form):
         project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
@@ -50,10 +51,11 @@ class IssueCreateView(LoginRequiredMixin, CreateView):
     #     return render(request, 'issues/issue_create.html', {'form': form})
 
 
-class IssueUpdateView(UpdateView):
+class IssueUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'issues/issue_update.html'
     model = Issue
     form_class = IssueForm
+    permission_required = 'webapp.change_issue'
 # class IssueUpdateView(View):
 #     def dispatch(self, request, *args, **kwargs):
 #         self.issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
@@ -74,9 +76,10 @@ class IssueUpdateView(UpdateView):
         return reverse('webapp:project_view', kwargs={'pk': self.object.project.pk})
 
 
-class IssueDeleteView(DeleteView):
+class IssueDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'issues/issue_delete.html'
     model = Issue
+    permission_required = 'webapp.change_issue'
 
     def get_success_url(self):
         return reverse('webapp:project_view', kwargs={'pk': self.object.project.pk})
