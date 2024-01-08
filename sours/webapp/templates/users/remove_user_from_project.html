@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Удаление пользователя
+{% endblock %}
+
+{% block content %}
+    <h2>Вы хотите удалить пользователя?</h2>
+    <form action="{% url 'webapp:remove_user_from_project' project.pk user.pk %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Да</button>
+        <a href="{% url 'webapp:project_view' project.pk %}" class="btn btn-success">Нет</a>
+    </form>
+{% endblock %}
+
+
+{#{% extends 'base.html' %}#}
+{##}
+{#{% block  title %}#}
+{#    Удаление пользователя#}
+{#{% endblock %}#}
+{##}
+{#{% block  content %}#}
+{#    <h2>Вы хотите удалить пользователя?</h2>#}
+{#    <form action="" method="POST">#}
+{#        {% csrf_token %}#}
+{#        <button type="submit" class="btn btn-danger">Да</button>#}
+{#    </form>#}
+{#    <a href="{% url 'webapp:project_view' project.pk %}" class="btn btn-success">Нет</a>#}
+{#{% endblock %}#}

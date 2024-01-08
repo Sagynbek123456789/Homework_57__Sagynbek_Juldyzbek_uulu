@@ -6,17 +6,17 @@
 
 
 {% block menu %}
-    {% if perms.webapp.change_project or project.user == request.user%}
+    {% if perms.webapp.change_project  %}
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_update_view' project.pk %}">Редактирование</a>
     </li>
     {% endif %}
-    {% if perms.webapp.change_project or project.user == request.user%}
+    {% if perms.webapp.delete_project  %}
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="{% url 'webapp:project_delete_view' project.pk %}">Удаление</a>
     </li>
     {% endif %}
-    {% if request.user.is_authenticated %}
+    {% if perms.webapp.change_project  %}
     <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="{% url 'webapp:issue_add_view' project.pk %}">Добавить задачу</a>
     </li>
@@ -35,6 +35,20 @@
                     <p class="card-text">Дата окончания: {{ project.end_date | default:" - " }}</p>
                 </div>
             </div>
+        <h3>Пользователи проекта</h3>
+        <div class="card mt-3">
+            <ul>
+                {% for user in users %}
+                    <li>
+                        {{ user.username }}
+                        <a href="{% url 'webapp:remove_user_from_project' project.pk user.pk %}" class="card-link p-lg-5 pb-3">Удалить пользователя</a>
+                    </li>
+                {% empty %}
+                    <li>Нет пользователей в проекте</li>
+                {% endfor %}
+                <a href="#" class="card-link">Добавить пользователя</a>
+            </ul>
+        </div>
     <h3>Задачи</h3>
     <div class="row row-cols-3">
         {% for issue in project.issues.all %}
@@ -47,11 +61,11 @@
                             {% for type in issue.types.all %}
                             	{{ type.title }} {% if forloop.last %}.{% else %}, {% endif %}
                             {% endfor %}</p>
-                        {% if perms.webapp.update_issue or issue.user == request.user%}
-                        <a href="{% url 'webapp:issue_update_view' issue.pk %}" class="card-link">Редактирование</a>
+                        {% if perms.webapp.change_issue %}
+                            <a href="{% url 'webapp:issue_update_view' issue.pk %}" class="card-link">Редактирование</a>
                         {% endif %}
-                        {% if perms.webapp.delete_issue or issue.user == request.user%}
-                        <a href="{% url 'webapp:issue_delete_view' issue.pk %}" class="card-link">Удаление</a>
+                        {% if perms.webapp.delete_issue  %}
+                            <a href="{% url 'webapp:issue_delete_view' issue.pk %}" class="card-link">Удаление</a>
                         {% endif %}
                     </div>
                 </div>

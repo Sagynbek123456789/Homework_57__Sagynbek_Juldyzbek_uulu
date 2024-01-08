@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from .validators import validate_summary_not_empty, validate_descriptions_length
+from django.shortcuts import reverse
 
 
 class Status(models.Model):
@@ -49,12 +50,20 @@ class Issue(models.Model):
     def __str__(self):
         return f'{self.id}. {self.summary}'
 
+    def get_absolute_url(self):
+        return reverse('webapp:issue_view', kwargs={'pk': self.pk})
+
 
 class Project(models.Model):
-    title = models.ForeignKey(get_user_model(), default=1, related_name='projects', on_delete=models.CASCADE, verbose_name='Название')
+    title = models.ForeignKey(get_user_model(), default=1, related_name='projects_with_title', on_delete=models.CASCADE, verbose_name='Название')
     descriptions = models.TextField(verbose_name='Описание')
     start_date = models.DateField(verbose_name='Дата начала')
     end_date = models.DateField(verbose_name='Дата окончания', null=True, blank=True)
+    users = models.ManyToManyField(get_user_model(), related_name='projects_with_users', verbose_name='Пользователи')
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(args, kwargs)
+    #     self.projectuser_set = None
 
     def __str__(self):
         return f'{self.title} - {self.start_date} - {self.end_date}'

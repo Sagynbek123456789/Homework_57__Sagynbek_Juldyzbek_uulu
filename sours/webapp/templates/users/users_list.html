@@ -1,0 +1,36 @@
+{#{% extends 'base.html' %}#}
+{##}
+{#{% block  title %}#}
+{#    {{ issue.summary }}#}
+{#{% endblock %}#}
+{##}
+{#{% block menu %}#}
+{#    <li class="nav-item">#}
+{#        <a class="nav-link active" aria-current="page" href="{% url 'webapp:issue_update_view' issue.pk %}">Редактирование</a>#}
+{#    </li>#}
+{#    <li class="nav-item">#}
+{#        <a class="nav-link active" aria-current="page" href="{% url 'webapp:issue_delete_view' issue.pk %}">Удаление</a>#}
+{#    </li>#}
+{#{% endblock %}#}
+{##}
+{#{% block  content %}#}
+{#    <div class="row row-cols-3">#}
+{#        <div class="col">#}
+{#            <div class="card">#}
+{#                <div class="card-body">#}
+{#                    <h5 class="card-title">{{ issue.summary }}</h5>#}
+{#                    <h6 class="card-subtitle mb-2 text-body-secondary">Статус: {{ issue.status.title }}</h6>#}
+{#                    <p class="card-subtitle mb-2 text-body-secondary">Типы:#}
+{#                            {% for type in issue.types.all %}#}
+{#                            	{{ type.title }} {% if forloop.last %}.{% else %}, {% endif %}#}
+{#                            {% endfor %}</p>#}
+{#                    <p class="card-text">{{ issue.descriptions }}</p>#}
+{#                </div>#}
+{#                <div class="card-footer">#}
+{#                    <p class="card-text">Время создания: {{ issue.created_at }}</p>#}
+{#                    <p class="card-text">Время обновления: {{ issue.updated_at }}</p>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}

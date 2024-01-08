@@ -7,15 +7,9 @@ from webapp.forms import IssueForm
 
 # Create your views here.
 
-class IssueView(DeleteView):
+class IssueView(View):
     template_name = 'issues/issue_view.html'
     model = Issue
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
-    #     context['issue'] = issue
-    #     return context
 
 
 class IssueCreateView(PermissionRequiredMixin, CreateView):
@@ -27,28 +21,12 @@ class IssueCreateView(PermissionRequiredMixin, CreateView):
         project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
         issue = form.save(commit=False)
         issue.project = project
-        issue.summary = self.request.user
         issue.save()
         form.save_m2m()
         return redirect('webapp:project_view', pk=project.pk)
 
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not request.user.is_authenticated:
-    #         return redirect('accounts:login')
-    #     return super().dispatch(request, *args, **kwargs)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['form'] = IssueForm()
-    #     return context
-    #
-    # def post(self, request, *args, **kwargs):
-    #     form = IssueForm(data=request.POST)
-    #     if form.is_valid():
-    #         issue = form.save()
-    #         return redirect('issue_view', pk=issue.pk)
-    #
-    #     return render(request, 'issues/issue_create.html', {'form': form})
+    def has_permission(self):
+        return self.request.user.has_perm('webapp.delete_project') or self.request.user == self.get_object().summary
 
 
 class IssueUpdateView(PermissionRequiredMixin, UpdateView):
@@ -59,21 +37,6 @@ class IssueUpdateView(PermissionRequiredMixin, UpdateView):
 
     def has_permission(self):
         return self.request.user.has_perm('webapp.delete_project') or self.request.user == self.get_object().summary
-# class IssueUpdateView(View):
-#     def dispatch(self, request, *args, **kwargs):
-#         self.issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
-#         return super().dispatch(request, *args, **kwargs)
-#
-#     def get(self, request, *args, **kwargs):
-#         form = IssueForm(instance=self.issue)
-#         return render(request, 'issues/issue_update.html', {'form': form})
-#
-#     def post(self, request, *args, **kwargs):
-#         form = IssueForm(instance=self.issue, data=request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('issue_view', pk=self.issue.pk)
-#         return render(request, 'issues/issue_update.html', {'form': form})
 
     def get_success_url(self):
         return reverse('webapp:project_view', kwargs={'pk': self.object.project.pk})
@@ -90,16 +53,5 @@ class IssueDeleteView(PermissionRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('webapp:project_view', kwargs={'pk': self.object.project.pk})
 
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
-    #     context['issue'] = issue
-    #     return context
-    #
-    # def post(self, request, *args, **kwargs):
-    #     issue = get_object_or_404(Issue, pk=self.kwargs.get('pk'))
-    #     issue.delete()
-    #     return redirect('index')
 
 

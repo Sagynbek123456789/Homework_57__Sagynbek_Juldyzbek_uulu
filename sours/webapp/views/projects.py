@@ -1,10 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from webapp.models import Project
 from webapp.forms import SimpleSearchForm, ProjectForm
 from django.utils.http import urlencode
-from django.shortcuts import reverse, redirect
+from django.shortcuts import reverse, redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 
 
@@ -49,6 +51,13 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     template_name = 'projects/project_view.html'
     permission_required = 'webapp.view_project'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.get_object()
+        users = project.users.all()
+        context['users'] = users
+        return context
+
 
 class ProjectCreateView(PermissionRequiredMixin, CreateView):
     model = Project
@@ -60,23 +69,18 @@ class ProjectCreateView(PermissionRequiredMixin, CreateView):
         return reverse('webapp:project_view', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
-        self.object = form.save()
+        self.object = form.save(commit=False)
         self.object.title = self.request.user
         self.object.save()
         # form.save_m2m()
         return redirect(self.get_success_url())
-
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not request.user.is_authenticated:
-    #         return redirect('accounts:login')
-    #     return super().dispatch(request, *args, **kwargs)
 
 
 class ProjectUpdateView(PermissionRequiredMixin, UpdateView):
     model = Project
     template_name = 'projects/project_update.html'
     form_class = ProjectForm
-    permission_required = 'webapp.update_project'
+    permission_required = 'webapp.change_project'
 
     def get_success_url(self):
         return reverse('webapp:project_view', kwargs={'pk': self.object.pk})
@@ -89,17 +93,54 @@ class ProjectDeleteView(PermissionRequiredMixin, DeleteView):
     model = Project
     template_name = 'projects/project_delete.html'
     success_url = reverse_lazy('webapp:index')
-    permission_required = 'webapp.delete_project'
+    # permission_required = 'webapp.delete_project'
 
+    def has_permission(self):
+        return self.request.user.has_perm('webapp.delete_project')
 
-
-
-# class IndexView(TemplateView):
-#     template_name = 'projects/index.html'
 #
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         issues = Issue.objects.all()
-#         context['issues'] = issues
-#         return context
-
+# class ProjectAddUserView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+#     model = Project
+#     template_name = 'users/add_user_to_project.html'
+#     permission_required = 'webapp.change_project'
+#
+#     def post(self, request, *args, **kwargs):
+#         project = self.get_object()
+#         user_id = request.POST.get('user_id')
+#         user = get_object_or_404(get_user_model(), pk=user_id)
+#         project.users.add(user)
+#         return redirect('webapp:project_view', pk=project.pk)
+#
+#     def add_user_to_project(request, project_id):
+#         project = get_object_or_404(Project, pk=project_id)
+#         users = get_user_model().objects.exclude(projects=project)
+#         if request.method == 'POST':
+#             user_id = request.POST.get('user_id')
+#             user = get_object_or_404(get_user_model(), pk=user_id)
+#             project.users.add(user)
+#             return redirect('webapp:project_view', pk=project_id)
+#         return render(request, 'users/add_user_to_project.html',
+#                       {'project': project, 'users': users})
+#
+#
+# class ProjectRemoveUserView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+#     model = Project
+#     template_name = 'users/remove_user_from_project.html'
+#     permission_required = 'webapp.change_project'
+#
+#     def post(self, request, *args, **kwargs):
+#         project = self.get_object()
+#         user_id = request.POST.get('user_id')
+#         user = get_object_or_404(get_user_model(), pk=user_id)
+#         project.users.remove(user)
+#         return redirect('webapp:project_view', pk=project.pk)
+#
+#
+# class UsersListView(View):
+#         template_name = 'users/users_list.html'
+#         model = Project
+#
+#     def project_users_list(request, project_id):
+#         project = get_object_or_404(Project, pk=project_id)
+#         users = project.projectuser_set.all()
+#         return render(request, 'users/users_list.html', {'project': project, 'users': users})
